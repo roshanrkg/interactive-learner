@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const pool = require('./db');
 const { passport } = require('./auth');
+const { generateVisualization } = require('./services/visualizer');
 
 const app = express();
 const PORT = process.env.PORT || 8081;
@@ -450,6 +451,84 @@ v1Router.post('/lessons/:slug/complete', ensureAuthenticated, async (req, res) =
   } catch (err) {
     console.error('Error saving lesson progress:', err);
     return respondError(res, `failed to save progress: ${err.message}`, 500);
+  }
+});
+
+// POST /api/v1/visualize
+v1Router.post('/visualize', ensureAuthenticated, async (req, res) => {
+  const { topic, language, code, lesson_title } = req.body || {};
+
+  if (!topic) {
+    return respondError(res, 'topic is required for visualization', 400);
+  }
+
+  try {
+    const html = await generateVisualization({
+      topic,
+      language: language || 'Python',
+      code: code || '',
+      lessonTitle: lesson_title || '',
+    });
+
+    // Save to user_visualizations in database
+    let savedId = null;
+    try {
+      const [insertRes] = await pool.query(
+        'INSERT INTO user_visualizations (user_id, topic, language, html_content) VALUES (?, ?, ?, ?)',
+        [req.user.id, topic, language || 'Python', html]
+      );
+      savedId = insertRes.insertId;
+    } catch (saveErr) {
+      console.warn('Could not save visualization to database:', saveErr.message);
+    }
+
+    return respondSuccess(res, {
+      id: savedId,
+      html,
+      topic,
+      language: language || 'Python',
+    });
+  } catch (err) {
+    console.error('Visualization generation error:', err);
+    return respondError(res, `failed to generate visualization: ${err.message}`, 500);
+  }
+});
+
+// GET /api/v1/visualizations (history list)
+v1Router.get('/visualizations', ensureAuthenticated, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, topic, language, created_at 
+       FROM user_visualizations 
+       WHERE user_id = ? 
+       ORDER BY id DESC 
+       LIMIT 30`,
+      [req.user.id]
+    );
+    return respondSuccess(res, rows);
+  } catch (err) {
+    console.error('Error fetching visualizations:', err);
+    return respondError(res, `failed to load visualizations: ${err.message}`, 500);
+  }
+});
+
+// GET /api/v1/visualizations/:id
+v1Router.get('/visualizations/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, topic, language, html_content, created_at 
+       FROM user_visualizations 
+       WHERE id = ? AND user_id = ? 
+       LIMIT 1`,
+      [req.params.id, req.user.id]
+    );
+    if (rows.length === 0) {
+      return respondError(res, 'visualization not found', 404);
+    }
+    return respondSuccess(res, rows[0]);
+  } catch (err) {
+    console.error('Error fetching visualization detail:', err);
+    return respondError(res, `failed to load visualization: ${err.message}`, 500);
   }
 });
 
