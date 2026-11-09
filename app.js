@@ -353,15 +353,103 @@ v1Router.post('/quizzes/verify', ensureAuthenticated, async (req, res) => {
     const isCorrect = option === normalizedCorrect;
     const pointsAwarded = isCorrect ? points : 0;
 
+    // Record submission into MySQL
+    const userId = req.user.id;
+    await pool.query(
+      `INSERT INTO user_quiz_submissions (user_id, quiz_id, selected_option, is_correct, points_awarded)
+       VALUES (?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         selected_option = VALUES(selected_option),
+         is_correct = VALUES(is_correct),
+         points_awarded = VALUES(points_awarded)`,
+      [userId, quiz_id, option, isCorrect, pointsAwarded]
+    );
+
+    // Fetch updated total user points
+    const [sumRows] = await pool.query(
+      `SELECT COALESCE(SUM(points_awarded), 0) AS total_points FROM user_quiz_submissions WHERE user_id = ?`,
+      [userId]
+    );
+    const totalPoints = sumRows[0]?.total_points || 0;
+
     return respondSuccess(res, {
       is_correct: isCorrect,
       correct_option: normalizedCorrect,
       explanation: explanation || '',
       points_awarded: pointsAwarded,
+      total_points: totalPoints,
     });
   } catch (err) {
     console.error('Error verifying quiz answer:', err);
     return respondError(res, `failed to verify answer: ${err.message}`, 500);
+  }
+});
+
+// GET /api/v1/user/progress
+v1Router.get('/user/progress', ensureAuthenticated, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch completed lesson slugs
+    const [progressRows] = await pool.query(
+      `SELECT l.slug 
+       FROM user_lesson_progress ulp
+       JOIN lessons l ON ulp.lesson_id = l.id
+       WHERE ulp.user_id = ?`,
+      [userId]
+    );
+
+    // Fetch total quiz points earned
+    const [pointsRows] = await pool.query(
+      `SELECT COALESCE(SUM(points_awarded), 0) AS total_points
+       FROM user_quiz_submissions
+       WHERE user_id = ?`,
+      [userId]
+    );
+
+    // Fetch quiz answers submitted by user
+    const [submissionRows] = await pool.query(
+      `SELECT quiz_id, selected_option, is_correct, points_awarded
+       FROM user_quiz_submissions
+       WHERE user_id = ?`,
+      [userId]
+    );
+
+    const completedSlugs = progressRows.map((r) => r.slug);
+    const totalPoints = pointsRows[0]?.total_points || 0;
+
+    return respondSuccess(res, {
+      completed_slugs: completedSlugs,
+      total_points: totalPoints,
+      submissions: submissionRows,
+    });
+  } catch (err) {
+    console.error('Error fetching user progress:', err);
+    return respondError(res, `failed to load progress: ${err.message}`, 500);
+  }
+});
+
+// POST /api/v1/lessons/:slug/complete
+v1Router.post('/lessons/:slug/complete', ensureAuthenticated, async (req, res) => {
+  const { slug } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const [lessonRows] = await pool.query('SELECT id FROM lessons WHERE slug = ? LIMIT 1', [slug]);
+    if (lessonRows.length === 0) {
+      return respondError(res, 'lesson not found', 404);
+    }
+
+    const lessonId = lessonRows[0].id;
+    await pool.query(
+      'INSERT IGNORE INTO user_lesson_progress (user_id, lesson_id) VALUES (?, ?)',
+      [userId, lessonId]
+    );
+
+    return respondSuccess(res, { completed: true, slug });
+  } catch (err) {
+    console.error('Error saving lesson progress:', err);
+    return respondError(res, `failed to save progress: ${err.message}`, 500);
   }
 });
 
