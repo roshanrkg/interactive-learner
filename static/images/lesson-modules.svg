@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Caller Script -->
+  <rect x="40" y="65" width="160" height="95" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="55" y="80" width="130" height="24" rx="6" fill="#e2e8f0"/>
+  <text x="120" y="96" fill="#334155" font-size="10" font-family="monospace" font-weight="bold" text-anchor="middle">app.py</text>
+  <text x="120" y="125" fill="#0f172a" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle">import calc</text>
+  <text x="120" y="145" fill="#64748b" font-size="9" font-family="sans-serif" text-anchor="middle">__name__ = '__main__'</text>
+
+  <!-- Arrow -->
+  <path d="M200 112 H260" stroke="#6366f1" stroke-width="2.5"/>
+
+  <!-- sys.modules Cache check -->
+  <rect x="260" y="55" width="200" height="115" rx="18" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="360" y="85" fill="#312e81" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">Module Loader &amp; Cache</text>
+  <rect x="275" y="100" width="170" height="28" rx="8" fill="#ffffff" stroke="#c7d2fe"/>
+  <text x="360" y="118" fill="#4338ca" font-size="10" font-family="monospace" text-anchor="middle">sys.modules['calc']?</text>
+  <text x="360" y="152" fill="#6366f1" font-size="9" font-family="sans-serif" text-anchor="middle">If miss: search sys.path</text>
+
+  <!-- Arrow -->
+  <path d="M460 112 H520" stroke="#10b981" stroke-width="2.5"/>
+
+  <!-- Target Module Loaded -->
+  <rect x="520" y="65" width="230" height="95" rx="16" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <rect x="535" y="80" width="200" height="24" rx="6" fill="#a7f3d0"/>
+  <text x="635" y="96" fill="#065f46" font-size="10" font-family="monospace" font-weight="bold" text-anchor="middle">calc.py (Module Context)</text>
+  <text x="635" y="125" fill="#047857" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">__name__ = 'calc'</text>
+  <text x="635" y="145" fill="#059669" font-size="9" font-family="sans-serif" text-anchor="middle">Isolated namespace bound to app.calc</text>
+</svg>
+

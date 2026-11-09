@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Start -->
+  <circle cx="70" cy="110" r="28" fill="#ffffff" stroke="#6366f1" stroke-width="2"/>
+  <text x="70" y="114" fill="#4338ca" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">Start</text>
+
+  <path d="M98 110 H170" stroke="#6366f1" stroke-width="2.5"/>
+
+  <!-- Condition / Iterator Check -->
+  <polygon points="240,60 310,110 240,160 170,110" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <text x="240" y="108" fill="#92400e" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">has_next()?</text>
+  <text x="240" y="124" fill="#b45309" font-size="9" font-family="sans-serif" text-anchor="middle">Iterable / Condition</text>
+
+  <!-- Loop Body (True) -->
+  <path d="M240 60 V30 H400 V70" stroke="#10b981" stroke-width="2"/>
+  <text x="320" y="24" fill="#10b981" font-size="10" font-family="sans-serif" font-weight="bold">True: Next Item</text>
+
+  <rect x="350" y="70" width="160" height="80" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="430" y="105" fill="#065f46" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle">Loop Body Code</text>
+  <text x="430" y="125" fill="#059669" font-size="10" font-family="sans-serif" text-anchor="middle">Execute statements</text>
+
+  <!-- Loop back arrow -->
+  <path d="M430 150 V185 H240 V160" stroke="#10b981" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="335" y="198" fill="#059669" font-size="10" font-family="sans-serif" font-weight="bold">Repeat (Next Iteration)</text>
+
+  <!-- Exit (False) -->
+  <path d="M310 110 H570" stroke="#64748b" stroke-width="2"/>
+  <text x="475" y="100" fill="#64748b" font-size="10" font-family="sans-serif">False / StopIteration</text>
+
+  <rect x="570" y="80" width="160" height="60" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="650" y="112" fill="#0f172a" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">Loop Terminates</text>
+  <text x="650" y="128" fill="#64748b" font-size="10" font-family="sans-serif" text-anchor="middle">Proceeds to next line</text>
+</svg>
+

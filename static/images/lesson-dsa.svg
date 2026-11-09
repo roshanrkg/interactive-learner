@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Card 1: deque -->
+  <rect x="40" y="35" width="165" height="150" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="55" y="50" width="135" height="26" rx="6" fill="#4f46e5"/>
+  <text x="122" y="67" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">collections.deque</text>
+  <text x="55" y="100" fill="#0f172a" font-size="12" font-family="sans-serif" font-weight="bold">Double-Ended Queue</text>
+  <text x="55" y="125" fill="#059669" font-size="11" font-family="sans-serif">O(1) Appends on both ends</text>
+  <text x="55" y="145" fill="#4338ca" font-size="10" font-family="monospace">appendleft(), popleft()</text>
+
+  <!-- Card 2: heapq -->
+  <rect x="225" y="35" width="165" height="150" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="240" y="50" width="135" height="26" rx="6" fill="#059669"/>
+  <text x="307" y="67" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">heapq (Priority Queue)</text>
+  <text x="240" y="100" fill="#0f172a" font-size="12" font-family="sans-serif" font-weight="bold">Binary Min-Heap</text>
+  <text x="240" y="125" fill="#059669" font-size="11" font-family="sans-serif">O(log n) Push &amp; Pop</text>
+  <text x="240" y="145" fill="#059669" font-size="10" font-family="monospace">heappush(), heappop()</text>
+
+  <!-- Card 3: Counter & defaultdict -->
+  <rect x="410" y="35" width="165" height="150" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="425" y="50" width="135" height="26" rx="6" fill="#d97706"/>
+  <text x="492" y="67" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">collections.Counter</text>
+  <text x="425" y="100" fill="#0f172a" font-size="12" font-family="sans-serif" font-weight="bold">Frequency Hash Map</text>
+  <text x="425" y="125" fill="#059669" font-size="11" font-family="sans-serif">O(n) Instant histogram</text>
+  <text x="425" y="145" fill="#d97706" font-size="10" font-family="monospace">Counter("banana")</text>
+
+  <!-- Card 4: bisect -->
+  <rect x="595" y="35" width="165" height="150" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="610" y="50" width="135" height="26" rx="6" fill="#7c3aed"/>
+  <text x="677" y="67" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">bisect module</text>
+  <text x="610" y="100" fill="#0f172a" font-size="12" font-family="sans-serif" font-weight="bold">Binary Search</text>
+  <text x="610" y="125" fill="#059669" font-size="11" font-family="sans-serif">O(log n) Bisection</text>
+  <text x="610" y="145" fill="#7c3aed" font-size="10" font-family="monospace">bisect_left(sorted, x)</text>
+</svg>
+

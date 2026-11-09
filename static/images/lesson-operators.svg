@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Left Operand Box -->
+  <rect x="50" y="65" width="140" height="90" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="70" y="80" width="100" height="24" rx="6" fill="#e2e8f0"/>
+  <text x="120" y="96" fill="#334155" font-size="10" font-family="sans-serif" font-weight="bold" text-anchor="middle">Left Operand</text>
+  <text x="120" y="130" fill="#0f172a" font-size="16" font-family="monospace" font-weight="bold" text-anchor="middle">a = 15</text>
+
+  <!-- Arrow -->
+  <path d="M190 110 H250" stroke="#6366f1" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Operator Node -->
+  <circle cx="310" cy="110" r="38" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="310" y="105" fill="#4338ca" font-size="20" font-family="monospace" font-weight="bold" text-anchor="middle">+</text>
+  <text x="310" y="125" fill="#6366f1" font-size="9" font-family="sans-serif" font-weight="bold" text-anchor="middle">OPERATOR</text>
+
+  <!-- Arrow -->
+  <path d="M370 110 H430" stroke="#6366f1" stroke-width="2.5"/>
+
+  <!-- Right Operand Box -->
+  <rect x="430" y="65" width="140" height="90" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="450" y="80" width="100" height="24" rx="6" fill="#e2e8f0"/>
+  <text x="500" y="96" fill="#334155" font-size="10" font-family="sans-serif" font-weight="bold" text-anchor="middle">Right Operand</text>
+  <text x="500" y="130" fill="#0f172a" font-size="16" font-family="monospace" font-weight="bold" text-anchor="middle">b = 27</text>
+
+  <!-- Arrow to Result -->
+  <path d="M570 110 H630" stroke="#10b981" stroke-width="2.5"/>
+
+  <!-- Evaluated Result Box -->
+  <rect x="630" y="65" width="130" height="90" rx="16" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <rect x="645" y="80" width="100" height="24" rx="6" fill="#a7f3d0"/>
+  <text x="695" y="96" fill="#065f46" font-size="10" font-family="sans-serif" font-weight="bold" text-anchor="middle">Evaluation</text>
+  <text x="695" y="130" fill="#047857" font-size="18" font-family="monospace" font-weight="bold" text-anchor="middle">42</text>
+
+  <!-- Category Pills Bottom -->
+  <rect x="120" y="175" width="100" height="26" rx="13" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="170" y="192" fill="#475569" font-size="10" font-family="sans-serif" text-anchor="middle">Arithmetic: +, -, *</text>
+
+  <rect x="240" y="175" width="110" height="26" rx="13" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="295" y="192" fill="#475569" font-size="10" font-family="sans-serif" text-anchor="middle">Comparison: ==, &lt;=</text>
+
+  <rect x="370" y="175" width="110" height="26" rx="13" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="425" y="192" fill="#475569" font-size="10" font-family="sans-serif" text-anchor="middle">Logical: and, or, not</text>
+
+  <rect x="500" y="175" width="110" height="26" rx="13" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="555" y="192" fill="#475569" font-size="10" font-family="sans-serif" text-anchor="middle">Identity / Mem: is, in</text>
+</svg>
+

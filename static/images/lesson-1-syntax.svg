@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf4ff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Step 1: Source Code -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="30" width="180" height="150" rx="20" fill="url(#grad1)" stroke="#c7d2fe" stroke-width="2"/>
+    <rect x="50" y="50" width="36" height="36" rx="10" fill="#4f46e5"/>
+    <text x="68" y="74" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle">.py</text>
+    <text x="50" y="112" fill="#1e1b4b" font-size="15" font-family="sans-serif" font-weight="bold">Source Code</text>
+    <text x="50" y="132" fill="#4338ca" font-size="12" font-family="sans-serif">Human Readable</text>
+    <text x="50" y="152" fill="#64748b" font-size="11" font-family="monospace">print("Hello")</text>
+  </g>
+
+  <!-- Arrow 1: CPython Compiler -->
+  <path d="M225 105 H275" stroke="#6366f1" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="285,105 273,98 273,112" fill="#6366f1"/>
+  <text x="252" y="90" fill="#6366f1" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">Compile</text>
+
+  <!-- Step 2: Bytecode -->
+  <g filter="url(#shadow)">
+    <rect x="295" y="30" width="180" height="150" rx="20" fill="url(#grad2)" stroke="#f5d0fe" stroke-width="2"/>
+    <rect x="315" y="50" width="36" height="36" rx="10" fill="#c026d3"/>
+    <text x="333" y="74" fill="#ffffff" font-size="13" font-family="sans-serif" font-weight="bold" text-anchor="middle">.pyc</text>
+    <text x="315" y="112" fill="#701a75" font-size="15" font-family="sans-serif" font-weight="bold">Bytecode</text>
+    <text x="315" y="132" fill="#a21caf" font-size="12" font-family="sans-serif">Platform Independent</text>
+    <text x="315" y="152" fill="#64748b" font-size="11" font-family="monospace">LOAD_CONST, CALL</text>
+  </g>
+
+  <!-- Arrow 2: PVM Interpreter -->
+  <path d="M490 105 H540" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="550,105 538,98 538,112" fill="#10b981"/>
+  <text x="517" y="90" fill="#10b981" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">Execute</text>
+
+  <!-- Step 3: Python Virtual Machine -->
+  <g filter="url(#shadow)">
+    <rect x="560" y="30" width="210" height="150" rx="20" fill="url(#grad3)" stroke="#a7f3d0" stroke-width="2"/>
+    <rect x="580" y="50" width="36" height="36" rx="10" fill="#059669"/>
+    <text x="598" y="74" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle">⚙️</text>
+    <text x="580" y="112" fill="#064e3b" font-size="15" font-family="sans-serif" font-weight="bold">Python Virtual Machine</text>
+    <text x="580" y="132" fill="#047857" font-size="12" font-family="sans-serif">CPython Engine (PVM)</text>
+    <text x="580" y="152" fill="#64748b" font-size="11" font-family="monospace">CPU / Machine Code</text>
+  </g>
+</svg>
+

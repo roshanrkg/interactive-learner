@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Title / Legend -->
+  <text x="50" y="35" fill="#1e1b4b" font-size="14" font-family="sans-serif" font-weight="bold">Python List Indexing &amp; Slice: <tspan fill="#6366f1">languages[1:4]</tspan></text>
+
+  <!-- Array Elements -->
+  <!-- Box 0 -->
+  <rect x="50" y="70" width="130" height="70" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="115" y="105" fill="#0f172a" font-size="15" font-family="monospace" font-weight="bold" text-anchor="middle">"Python"</text>
+  <text x="115" y="60" fill="#6366f1" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">+0</text>
+  <text x="115" y="160" fill="#94a3b8" font-size="11" font-family="sans-serif" text-anchor="middle">-5</text>
+
+  <!-- Box 1 (Sliced) -->
+  <rect x="190" y="70" width="130" height="70" rx="14" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="255" y="105" fill="#312e81" font-size="15" font-family="monospace" font-weight="bold" text-anchor="middle">"Go"</text>
+  <text x="255" y="60" fill="#4338ca" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">+1 (Start)</text>
+  <text x="255" y="160" fill="#4338ca" font-size="11" font-family="sans-serif" text-anchor="middle">-4</text>
+
+  <!-- Box 2 (Sliced) -->
+  <rect x="330" y="70" width="130" height="70" rx="14" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="395" y="105" fill="#312e81" font-size="15" font-family="monospace" font-weight="bold" text-anchor="middle">"Rust"</text>
+  <text x="395" y="60" fill="#4338ca" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">+2</text>
+  <text x="395" y="160" fill="#4338ca" font-size="11" font-family="sans-serif" text-anchor="middle">-3</text>
+
+  <!-- Box 3 (Sliced) -->
+  <rect x="470" y="70" width="130" height="70" rx="14" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="535" y="105" fill="#312e81" font-size="15" font-family="monospace" font-weight="bold" text-anchor="middle">"TypeScript"</text>
+  <text x="535" y="60" fill="#4338ca" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">+3</text>
+  <text x="535" y="160" fill="#4338ca" font-size="11" font-family="sans-serif" text-anchor="middle">-2</text>
+
+  <!-- Box 4 (Stop) -->
+  <rect x="610" y="70" width="130" height="70" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="675" y="105" fill="#0f172a" font-size="15" font-family="monospace" font-weight="bold" text-anchor="middle">"Kotlin"</text>
+  <text x="675" y="60" fill="#ef4444" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">+4 (Stop - Excluded)</text>
+  <text x="675" y="160" fill="#94a3b8" font-size="11" font-family="sans-serif" text-anchor="middle">-1</text>
+</svg>
+

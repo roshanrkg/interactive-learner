@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%" fill="none">
+  <!-- Key Box -->
+  <rect x="50" y="55" width="160" height="90" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="130" y="90" fill="#0f172a" font-size="16" font-family="monospace" font-weight="bold" text-anchor="middle">"username"</text>
+  <text x="130" y="115" fill="#64748b" font-size="12" font-family="sans-serif" text-anchor="middle">Dictionary Key (String)</text>
+
+  <!-- Arrow to Hash Function -->
+  <path d="M210 100 H280" stroke="#f59e0b" stroke-width="3"/>
+
+  <!-- Hash Algorithm Box -->
+  <rect x="280" y="45" width="180" height="110" rx="20" fill="#fffbeb" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="370" y="85" fill="#b45309" font-size="20" text-anchor="middle">⚡</text>
+  <text x="370" y="110" fill="#78350f" font-size="13" font-family="sans-serif" font-weight="bold" text-anchor="middle">SipHash Algorithm</text>
+  <text x="370" y="130" fill="#b45309" font-size="11" font-family="monospace" text-anchor="middle">hash("username")</text>
+
+  <!-- Arrow to Bucket -->
+  <path d="M460 100 H530" stroke="#10b981" stroke-width="3"/>
+  <text x="495" y="90" fill="#10b981" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">O(1)</text>
+
+  <!-- Bucket Array -->
+  <rect x="530" y="35" width="220" height="130" rx="20" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5"/>
+  <text x="640" y="65" fill="#065f46" font-size="13" font-family="sans-serif" font-weight="bold" text-anchor="middle">Bucket #7 Array Slot</text>
+  <rect x="555" y="80" width="170" height="60" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="640" y="105" fill="#0f172a" font-size="14" font-family="monospace" font-weight="bold" text-anchor="middle">"roshan_dev"</text>
+  <text x="640" y="125" fill="#047857" font-size="11" font-family="sans-serif" text-anchor="middle">Direct Memory Access</text>
+</svg>
+

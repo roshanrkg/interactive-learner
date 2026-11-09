@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Learner - Python Programming Course</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Smooth custom scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.4); }
+    
+    /* Ambient Aurora Gradient Background */
+    .aurora-bg {
+      background: radial-gradient(circle at 10% 20%, rgba(219, 234, 254, 0.8) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 25%, rgba(254, 215, 170, 0.7) 0%, transparent 45%),
+                  radial-gradient(circle at 50% 85%, rgba(254, 240, 138, 0.3) 0%, transparent 50%),
+                  #f8fafc;
+      background-attachment: fixed;
+    }
+
+    /* Content typography & GeeksforGeeks-style rich documentation */
+    .lesson-content h3 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-top: 1.75rem; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.5rem; }
+    .lesson-content h4 { font-size: 1rem; font-weight: 600; color: #1e293b; margin-top: 1.25rem; margin-bottom: 0.4rem; }
+    .lesson-content p { color: #334155; font-size: 0.925rem; line-height: 1.7; margin-bottom: 0.85rem; }
+    .lesson-content ul, .lesson-content ol { margin-left: 1.25rem; margin-bottom: 0.85rem; color: #334155; font-size: 0.9rem; line-height: 1.65; }
+    .lesson-content li { margin-bottom: 0.4rem; }
+    .lesson-content code { background-color: #f1f5f9; color: #4338ca; padding: 0.15rem 0.45rem; border-radius: 0.375rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; font-weight: 500; }
+    .lesson-content pre { background-color: #0f172a; color: #f8fafc; padding: 1.15rem; border-radius: 0.85rem; overflow-x: auto; margin-bottom: 1.15rem; font-size: 0.835rem; line-height: 1.6; border: 1px solid #1e293b; }
+    .lesson-content pre code { background-color: transparent; color: inherit; padding: 0; font-size: inherit; }
+    .lesson-content blockquote { border-left: 3px solid #6366f1; background: #eef2ff; padding: 0.75rem 1rem; border-radius: 0 0.5rem 0.5rem 0; margin-bottom: 1rem; font-style: italic; color: #3730a3; font-size: 0.9rem; }
+    .lesson-content table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 1.25rem 0; border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; font-size: 0.85rem; }
+    .lesson-content th { background-color: #f8fafc; color: #0f172a; font-weight: 700; text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; }
+    .lesson-content td { padding: 0.7rem 1rem; border-bottom: 1px solid #f1f5f9; color: #475569; }
+    .lesson-content tr:last-child td { border-bottom: none; }
+    .lesson-content tr:nth-child(even) td { background-color: rgba(248, 250, 252, 0.6); }
+    .lesson-content .tip-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #16a34a; border-radius: 0.65rem; padding: 0.85rem 1.1rem; margin: 1rem 0; font-size: 0.875rem; color: #166534; }
+    .lesson-content .warn-box { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #ea580c; border-radius: 0.65rem; padding: 0.85rem 1.1rem; margin: 1rem 0; font-size: 0.875rem; color: #9a3412; }
+    .lesson-content .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #2563eb; border-radius: 0.65rem; padding: 0.85rem 1.1rem; margin: 1rem 0; font-size: 0.875rem; color: #1e40af; }
+    .lesson-content .key-point { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .lesson-content .key-point-bullet { width: 6px; height: 6px; border-radius: 50%; background-color: #6366f1; margin-top: 0.55rem; flex-shrink: 0; }
+  </style>
+</head>
+<body class="aurora-bg text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- 1. TOP GLOBAL NAVIGATION BAR -->
+  <header class="h-20 px-6 lg:px-12 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md bg-white/60 border-b border-white/60 relative">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-bold text-xs tracking-wider shadow-sm">
+        IL
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-extrabold text-lg tracking-tight text-slate-900">Interactive Learner</span>
+        <span class="text-slate-300">/</span>
+        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100" id="course-title">Python Track</span>
+      </div>
+    </div>
+
+    <!-- Centered Floating Navigation Pill (True Center) -->
+    <nav class="hidden md:flex items-center p-1.5 rounded-full bg-white/80 shadow-sm border border-slate-200/60 backdrop-blur-lg absolute left-1/2 -translate-x-1/2">
+      <a href="/" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-sm transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        <span>Curriculum</span>
+      </a>
+      <a href="#code-section" class="flex items-center gap-2 px-4 py-1.5 rounded-full text-slate-600 hover:text-slate-900 text-xs font-medium transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+        <span>Playground</span>
+      </a>
+      <a href="#quiz-section" class="flex items-center gap-2 px-4 py-1.5 rounded-full text-slate-600 hover:text-slate-900 text-xs font-medium transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>Assessment</span>
+      </a>
+    </nav>
+
+    <!-- User Profile Pill -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/80 border border-slate-200/60 shadow-sm cursor-pointer hover:bg-white transition">
+        <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">
+          RK
+        </div>
+        <span class="text-xs font-semibold text-slate-800">Roshan KR. Gupta</span>
+        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. MAIN 3-COLUMN CONTENT WORKSPACE -->
+  <div class="flex-1 flex max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-6 gap-8">
+
+    <!-- LEFT SIDEBAR: CHAPTER SYLLABUS DIRECTORY -->
+    <aside class="w-80 shrink-0 hidden md:flex flex-col gap-4 sticky top-28 h-[calc(100vh-8.5rem)] overflow-y-auto pr-1">
+      
+      <!-- Course Progress Card -->
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-5 border border-white/80 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Course Track</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">Active</span>
+        </div>
+        <h2 class="text-base font-bold text-slate-900" id="sidebar-course-title">Python 3 Programming</h2>
+        <div class="mt-3 flex items-center gap-2">
+          <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full w-1/6 transition-all duration-500"></div>
+          </div>
+          <span class="text-xs font-bold text-indigo-600" id="progress-text">1 of 6</span>
+        </div>
+      </div>
+
+      <!-- Syllabus Chapters Container (Loaded from MySQL via Gin) -->
+      <div id="syllabus-container" class="bg-white/80 backdrop-blur-md rounded-3xl p-5 border border-white/80 shadow-sm flex-1 space-y-4">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Curriculum Chapters</div>
+        <div class="text-xs text-slate-400 p-2 animate-pulse">Loading curriculum...</div>
+      </div>
+    </aside>
+
+    <!-- CENTER MAIN LESSON READING AREA -->
+    <main class="flex-1 min-w-0 flex flex-col gap-6" id="main-content">
+      
+      <!-- Loading State Spinner -->
+      <div id="lesson-loader" class="bg-white/90 backdrop-blur-md rounded-3xl p-12 border border-white/80 shadow-sm text-center">
+        <div class="animate-spin w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p class="text-sm font-semibold text-slate-600">Loading lesson content...</p>
+      </div>
+
+      <!-- Main Lesson View (Populated dynamically) -->
+      <div id="lesson-view" class="space-y-6 hidden">
+
+        <!-- HERO HEADER CARD -->
+        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
+          <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-400 mb-3">
+            <span id="lesson-chapter-title">Chapter</span>
+            <span>•</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium" id="lesson-read-time">5 min read</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium" id="lesson-difficulty">Beginner</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3" id="lesson-title">
+            Lesson Title
+          </h1>
+
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6" id="lesson-summary">
+            Summary hook
+          </p>
+
+          <!-- Quick Navigation Pill Buttons -->
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+            <span class="text-slate-400 font-medium mr-1">Sections:</span>
+            <a href="#diagram-section" class="px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-medium transition">
+              Architecture Diagram
+            </a>
+            <a href="#code-section" class="px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-medium transition">
+              Code &amp; Terminal
+            </a>
+            <a href="#practice-section" class="px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-medium transition">
+              Practice Challenge
+            </a>
+            <a href="#quiz-section" class="px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-medium transition">
+              Assessment Quiz
+            </a>
+          </div>
+        </div>
+
+        <!-- MENTAL MODEL ANALOGY CARD -->
+        <div id="analogy-card" class="bg-gradient-to-r from-amber-50/70 via-white to-amber-50/30 rounded-3xl p-6 border border-amber-200/60 shadow-sm text-sm text-amber-950">
+          <div class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2">Core Mental Model</div>
+          <div id="analogy-content"></div>
+        </div>
+
+        <!-- RICH CONTENT BODY -->
+        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+          <div id="lesson-body" class="lesson-content"></div>
+        </div>
+
+        <!-- PRODUCTION NOTE / GOTCHAS ALERT CARD -->
+        <div id="pitfall-card" class="bg-gradient-to-r from-rose-50/80 via-white to-rose-50/30 rounded-3xl p-6 border border-rose-200/60 shadow-sm text-sm text-rose-950">
+          <div class="text-xs font-bold uppercase tracking-wider text-rose-700 mb-2">Production Gotcha &amp; Best Practice</div>
+          <div id="pitfall-content"></div>
+        </div>
+
+        <!-- ARCHITECTURAL CONCEPT DIAGRAM CARD -->
+        <div id="diagram-section" class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+          <h2 class="text-base font-bold text-slate-900 mb-1">Architectural Concept Diagram</h2>
+          <p class="text-xs text-slate-500 mb-5">Visual breakdown of internal execution:</p>
+          <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-200/60 flex justify-center overflow-x-auto">
+            <img id="lesson-diagram-img" src="" alt="Lesson Diagram" class="max-w-full h-auto rounded-xl">
+          </div>
+        </div>
+
+        <!-- INTERACTIVE CODE PLAYGROUND CARD -->
+        <div id="code-section" class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Code Implementation</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Executable Python snippet:</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="copySnippet()" id="copy-snippet-btn" class="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <span>Copy</span>
+              </button>
+              <button onclick="runSnippetDemo()" class="px-4 py-1.5 text-xs font-bold rounded-full bg-slate-900 hover:bg-slate-800 text-white transition shadow-sm flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                <span>Run Code</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Code Box -->
+          <div class="rounded-2xl overflow-hidden border border-slate-900/10 bg-[#0f172a] text-slate-200 text-xs sm:text-sm font-mono shadow-inner">
+            <div class="px-4 py-2.5 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span class="ml-2 font-sans font-semibold text-slate-300 text-xs" id="code-filename">main.py</span>
+              </span>
+              <span class="text-[11px] font-sans text-slate-500">Python 3</span>
+            </div>
+            <pre class="p-5 overflow-x-auto leading-relaxed"><code id="code-snippet-box"></code></pre>
+          </div>
+
+          <!-- Terminal Output Console -->
+          <div id="output-console-box" class="mt-4 p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-mono hidden">
+            <div class="flex items-center justify-between text-slate-400 pb-2 border-b border-slate-800 mb-2">
+              <span>Terminal Execution Output</span>
+              <span class="text-emerald-400 font-semibold">Exit Code 0 (Success)</span>
+            </div>
+            <div class="text-slate-200 whitespace-pre-wrap font-mono" id="output-text"></div>
+          </div>
+
+          <!-- Line-by-Line Walkthrough -->
+          <div id="line-by-line-card" class="mt-5 p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-xs text-indigo-950">
+            <div class="font-bold text-indigo-900 mb-2">Line-by-Line Walkthrough</div>
+            <div id="line-by-line-content"></div>
+          </div>
+        </div>
+
+        <!-- PRACTICE CHALLENGE CARD -->
+        <div id="practice-section" class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Hands-on Coding Challenge
+            </span>
+            <span class="text-xs text-slate-500 font-medium">Practice</span>
+          </div>
+
+          <h3 class="text-base font-bold text-slate-900 mb-2" id="exercise-title">Practice Challenge</h3>
+          <p class="text-xs sm:text-sm text-slate-600 mb-4" id="exercise-instruction">Instruction</p>
+
+          <div class="p-4 rounded-2xl bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto mb-4 whitespace-pre-wrap" id="exercise-starter"></div>
+
+          <!-- Toggleable Solution -->
+          <button onclick="toggleExerciseSolution()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1.5">
+            <span id="solution-toggle-icon">▶</span>
+            <span>Toggle Solution &amp; Hint</span>
+          </button>
+          
+          <div id="exercise-solution-box" class="mt-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs hidden">
+            <div class="font-bold text-slate-700 mb-1">Hint:</div>
+            <p class="text-slate-600 mb-3" id="exercise-hint"></p>
+            <div class="font-bold text-slate-700 mb-1">Solution:</div>
+            <pre class="p-3 rounded-xl bg-slate-900 text-emerald-300 font-mono text-xs overflow-x-auto"><code id="exercise-solution-code"></code></pre>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE MCQ KNOWLEDGE CHECK -->
+        <div id="quiz-section" class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Knowledge Check
+            </span>
+            <span class="text-xs text-slate-700 font-semibold bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200" id="quiz-points">+10 Points</span>
+          </div>
+
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2" id="quiz-question">
+            Quiz Question
+          </h3>
+          <p class="text-xs text-slate-500 mb-5">Select the correct option below:</p>
+
+          <!-- Quiz Options List -->
+          <div class="space-y-3" id="quiz-options-container"></div>
+
+          <!-- Verification Feedback Alert -->
+          <div id="quiz-feedback-box" class="mt-4 p-4 rounded-2xl text-xs sm:text-sm hidden"></div>
+        </div>
+
+        <!-- PREV / NEXT FOOTER NAVIGATION -->
+        <footer class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 pb-8">
+          <button id="prev-lesson-btn" onclick="goToPrevLesson()" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white/80 hover:bg-white border border-slate-200/80 text-slate-700 text-xs font-bold flex items-center justify-center gap-3 transition shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            <div class="text-left">
+              <div class="text-[10px] text-slate-400 uppercase tracking-wider">Previous</div>
+              <div class="text-slate-900 font-bold" id="prev-lesson-title">Previous Lesson</div>
+            </div>
+          </button>
+
+          <button id="next-lesson-btn" onclick="goToNextLesson()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-3 transition shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 uppercase tracking-wider">Next</div>
+              <div class="text-white font-bold" id="next-lesson-title">Next Lesson</div>
+            </div>
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </footer>
+
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR: IN-PAGE TABLE OF CONTENTS -->
+    <aside class="w-64 shrink-0 hidden xl:flex flex-col gap-4 sticky top-28 h-[calc(100vh-8.5rem)] overflow-y-auto">
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-5 border border-white/80 shadow-sm">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">On This Page</h4>
+        <nav class="space-y-2 text-xs">
+          <a href="#lesson-view" class="block text-indigo-600 font-semibold hover:text-indigo-800">1. Overview</a>
+          <a href="#analogy-card" class="block text-slate-600 hover:text-slate-900 transition">2. Mental Model</a>
+          <a href="#lesson-body" class="block text-slate-600 hover:text-slate-900 transition">3. In-Depth Guide</a>
+          <a href="#diagram-section" class="block text-slate-600 hover:text-slate-900 transition">4. Architecture Diagram</a>
+          <a href="#code-section" class="block text-slate-600 hover:text-slate-900 transition">5. Code &amp; Output</a>
+          <a href="#practice-section" class="block text-slate-600 hover:text-slate-900 transition">6. Practice Challenge</a>
+          <a href="#quiz-section" class="block text-slate-600 hover:text-slate-900 transition">7. Knowledge Check</a>
+        </nav>
+      </div>
+
+      <!-- Quick Reference Card -->
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-5 border border-white/80 shadow-sm text-xs">
+        <div class="font-bold text-slate-900 mb-1">Python Reference</div>
+        <p class="text-slate-500 text-[11px] mb-3">Core built-in helpers:</p>
+        <div class="space-y-1.5 font-mono text-[11px]">
+          <div class="p-1.5 rounded-lg bg-slate-100 text-slate-800">type(obj).__name__</div>
+          <div class="p-1.5 rounded-lg bg-slate-100 text-slate-800">f"Hello {name}"</div>
+          <div class="p-1.5 rounded-lg bg-slate-100 text-slate-800">dict.get(key, default)</div>
+          <div class="p-1.5 rounded-lg bg-slate-100 text-slate-800">list[start:stop:step]</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- JAVASCRIPT: LIVE GIN BACKEND CONNECTIVITY -->
+  <script>
+    const API_BASE = '/api/v1';
+    let currentSyllabus = null;
+    let currentLesson = null;
+    let completedLessons = new Set(JSON.parse(localStorage.getItem('completed_lessons') || '[]'));
+
+    async function loadSyllabus(courseSlug = 'python') {
+      try {
+        const res = await fetch(`${API_BASE}/courses/${courseSlug}/syllabus`);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error);
+
+        currentSyllabus = json.data;
+        document.getElementById('course-title').innerText = currentSyllabus.course.title;
+        document.getElementById('sidebar-course-title').innerText = currentSyllabus.course.title;
+
+        renderSidebar();
+
+        const hash = window.location.hash.replace('#', '');
+        const allLessons = currentSyllabus.chapters.flatMap(c => c.lessons || []);
+        const matchingLesson = allLessons.find(l => l.slug === hash);
+
+        if (matchingLesson) {
+          loadLesson(matchingLesson.slug);
+        } else if (allLessons.length > 0) {
+          loadLesson(allLessons[0].slug);
+        }
+      } catch (err) {
+        document.getElementById('syllabus-container').innerHTML = `
+          <div class="text-xs text-rose-500 p-2">Error loading syllabus: ${err.message}</div>
+        `;
+      }
+    }
+
+    let collapsedChapters = new Set();
+
+    function toggleChapter(chapterId) {
+      if (collapsedChapters.has(chapterId)) {
+        collapsedChapters.delete(chapterId);
+      } else {
+        collapsedChapters.add(chapterId);
+      }
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      const container = document.getElementById('syllabus-container');
+      let totalLessons = 0;
+      let completedCount = 0;
+
+      const html = currentSyllabus.chapters.map(ch => {
+        totalLessons += ch.lessons.length;
+        const isCollapsed = collapsedChapters.has(ch.id);
+
+        const lessonsHTML = ch.lessons.map(l => {
+          const isCompleted = completedLessons.has(l.slug);
+          if (isCompleted) completedCount++;
+          const isActive = currentLesson && currentLesson.slug === l.slug;
+
+          const itemClass = isActive 
+            ? 'bg-white shadow-sm border border-indigo-100 text-indigo-700 font-semibold' 
+            : 'text-slate-600 hover:bg-white/80';
+
+          const iconHTML = isCompleted
+            ? `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-bold">✓</span>`
+            : isActive
+            ? `<span class="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">●</span>`
+            : `<span class="w-4 h-4 rounded-full border border-slate-200 text-slate-400 flex items-center justify-center text-[10px]">○</span>`;
+
+          return `
+            <a href="javascript:void(0)" onclick="loadLesson('${l.slug}')" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs transition ${itemClass}">
+              <span class="flex items-center gap-2 truncate">
+                ${iconHTML}
+                <span class="truncate">${escapeHtml(l.title)}</span>
+              </span>
+              <span class="text-[10px] text-slate-400 font-medium shrink-0 ml-1">${l.read_time_minutes}m</span>
+            </a>
+          `;
+        }).join('');
+
+        const chevronIcon = isCollapsed ? '›' : '⌄';
+        const displayStyle = isCollapsed ? 'hidden' : 'space-y-1 mt-2';
+
+        return `
+          <div class="p-3 rounded-2xl bg-slate-50/70 border border-slate-100/90">
+            <button onclick="toggleChapter(${ch.id})" class="w-full flex items-center justify-between text-left focus:outline-none group">
+              <span class="text-xs font-bold text-slate-800 truncate">${escapeHtml(ch.title)}</span>
+              <span class="text-xs font-bold text-slate-400 group-hover:text-slate-600 px-1 font-mono">${chevronIcon}</span>
+            </button>
+            <div class="${displayStyle}">${lessonsHTML}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `<div class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Curriculum Chapters</div>` + html;
+
+      const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+      document.getElementById('progress-bar-fill').style.width = `${Math.max(5, progressPercent)}%`;
+      document.getElementById('progress-text').innerText = `${completedCount} of ${totalLessons} (${progressPercent}%)`;
+    }
+
+    async function loadLesson(slug) {
+      const loader = document.getElementById('lesson-loader');
+      const view = document.getElementById('lesson-view');
+      loader.classList.remove('hidden');
+      view.classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API_BASE}/lessons/${slug}`);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error);
+
+        currentLesson = json.data;
+        renderLessonDetail();
+        renderSidebar();
+
+        completedLessons.add(slug);
+        localStorage.setItem('completed_lessons', JSON.stringify([...completedLessons]));
+
+        loader.classList.add('hidden');
+        view.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        loader.innerHTML = `<div class="text-rose-500 font-semibold p-4">Error: ${err.message}</div>`;
+      }
+    }
+
+    function renderLessonDetail() {
+      const l = currentLesson;
+      document.getElementById('lesson-chapter-title').innerText = l.chapter_title;
+      document.getElementById('lesson-read-time').innerText = `${l.read_time_minutes} min read`;
+      document.getElementById('lesson-difficulty').innerText = l.difficulty;
+      document.getElementById('lesson-title').innerText = l.title;
+      document.getElementById('lesson-summary').innerText = l.summary_hook;
+
+      const analogyCard = document.getElementById('analogy-card');
+      if (l.real_world_analogy) {
+        analogyCard.classList.remove('hidden');
+        document.getElementById('analogy-content').innerHTML = l.real_world_analogy;
+      } else {
+        analogyCard.classList.add('hidden');
+      }
+
+      document.getElementById('lesson-body').innerHTML = l.content_body;
+
+      const pitfallCard = document.getElementById('pitfall-card');
+      if (l.pitfalls_gotchas) {
+        pitfallCard.classList.remove('hidden');
+        document.getElementById('pitfall-content').innerHTML = l.pitfalls_gotchas;
+      } else {
+        pitfallCard.classList.add('hidden');
+      }
+
+      const diagramImg = document.getElementById('lesson-diagram-img');
+      const diagramSection = document.getElementById('diagram-section');
+      if (l.image_url) {
+        diagramImg.onerror = () => {
+          diagramSection.classList.add('hidden');
+        };
+        diagramImg.onload = () => {
+          diagramSection.classList.remove('hidden');
+        };
+        diagramImg.src = l.image_url;
+        diagramSection.classList.remove('hidden');
+      } else {
+        diagramSection.classList.add('hidden');
+      }
+
+      document.getElementById('code-snippet-box').innerText = l.code_snippet;
+      document.getElementById('output-console-box').classList.add('hidden');
+      document.getElementById('output-text').innerText = l.expected_output;
+
+      const lineByLineCard = document.getElementById('line-by-line-card');
+      if (l.line_by_line_explanation) {
+        lineByLineCard.classList.remove('hidden');
+        document.getElementById('line-by-line-content').innerHTML = l.line_by_line_explanation;
+      } else {
+        lineByLineCard.classList.add('hidden');
+      }
+
+      const practiceSection = document.getElementById('practice-section');
+      if (l.exercise) {
+        practiceSection.classList.remove('hidden');
+        document.getElementById('exercise-title').innerText = l.exercise.title;
+        document.getElementById('exercise-instruction').innerText = l.exercise.instruction;
+        document.getElementById('exercise-starter').innerText = l.exercise.starter_code;
+        document.getElementById('exercise-hint').innerText = l.exercise.hint;
+        document.getElementById('exercise-solution-code').innerText = l.exercise.solution_code;
+        document.getElementById('exercise-solution-box').classList.add('hidden');
+        document.getElementById('solution-toggle-icon').innerText = '▶';
+      } else {
+        practiceSection.classList.add('hidden');
+      }
+
+      const quizSection = document.getElementById('quiz-section');
+      if (l.quiz) {
+        quizSection.classList.remove('hidden');
+        document.getElementById('quiz-question').innerText = l.quiz.question;
+        document.getElementById('quiz-points').innerText = `+${l.quiz.points} Points`;
+        document.getElementById('quiz-feedback-box').classList.add('hidden');
+
+        const options = [
+          { key: 'A', text: l.quiz.option_a },
+          { key: 'B', text: l.quiz.option_b },
+          { key: 'C', text: l.quiz.option_c },
+          { key: 'D', text: l.quiz.option_d }
+        ];
+
+        document.getElementById('quiz-options-container').innerHTML = options.map(opt => `
+          <div onclick="submitQuizOption(${l.quiz.id}, '${opt.key}')" id="quiz-opt-${opt.key}" class="flex items-center gap-3.5 p-3.5 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-slate-300 cursor-pointer transition">
+            <div class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs text-slate-600 font-bold bg-white">${opt.key}</div>
+            <span class="text-xs sm:text-sm text-slate-700 font-mono">${escapeHtml(opt.text)}</span>
+          </div>
+        `).join('');
+      } else {
+        quizSection.classList.add('hidden');
+      }
+
+      const prevBtn = document.getElementById('prev-lesson-btn');
+      if (l.prev_lesson_slug) {
+        prevBtn.disabled = false;
+        document.getElementById('prev-lesson-title').innerText = l.prev_lesson_title;
+      } else {
+        prevBtn.disabled = true;
+        document.getElementById('prev-lesson-title').innerText = 'Course Beginning';
+      }
+
+      const nextBtn = document.getElementById('next-lesson-btn');
+      if (l.next_lesson_slug) {
+        nextBtn.disabled = false;
+        document.getElementById('next-lesson-title').innerText = l.next_lesson_title;
+      } else {
+        nextBtn.disabled = true;
+        document.getElementById('next-lesson-title').innerText = 'Course Completed';
+      }
+    }
+
+    async function submitQuizOption(quizId, selectedOption) {
+      try {
+        const res = await fetch(`${API_BASE}/quizzes/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ quiz_id: quizId, selected_option: selectedOption })
+        });
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error);
+
+        const data = json.data;
+        const feedback = document.getElementById('quiz-feedback-box');
+        
+        ['A', 'B', 'C', 'D'].forEach(opt => {
+          const el = document.getElementById(`quiz-opt-${opt}`);
+          if (el) el.className = 'flex items-center gap-3.5 p-3.5 rounded-2xl border border-slate-200 bg-slate-50/60 cursor-pointer transition';
+        });
+
+        const correctEl = document.getElementById(`quiz-opt-${data.correct_option}`);
+        if (correctEl) {
+          correctEl.className = 'flex items-center gap-3.5 p-3.5 rounded-2xl border border-emerald-500 bg-emerald-50 text-emerald-800 cursor-pointer transition';
+        }
+
+        if (data.is_correct) {
+          feedback.className = 'mt-4 p-4 rounded-2xl text-xs sm:text-sm bg-emerald-50 border border-emerald-200 text-emerald-800 block';
+          feedback.innerHTML = `
+            <strong class="font-bold text-emerald-800">Correct (+${data.points_awarded} Points)</strong>
+            <p class="mt-1 text-slate-700">${escapeHtml(data.explanation)}</p>
+          `;
+        } else {
+          const chosenEl = document.getElementById(`quiz-opt-${selectedOption}`);
+          if (chosenEl) {
+            chosenEl.className = 'flex items-center gap-3.5 p-3.5 rounded-2xl border border-rose-400 bg-rose-50 text-rose-800 cursor-pointer transition';
+          }
+          feedback.className = 'mt-4 p-4 rounded-2xl text-xs sm:text-sm bg-rose-50 border border-rose-200 text-rose-800 block';
+          feedback.innerHTML = `
+            <strong class="font-bold text-rose-800">Incorrect</strong>
+            <p class="mt-1 text-slate-700">${escapeHtml(data.explanation)}</p>
+          `;
+        }
+      } catch (err) {
+        alert('Verification error: ' + err.message);
+      }
+    }
+
+    function toggleExerciseSolution() {
+      const box = document.getElementById('exercise-solution-box');
+      const icon = document.getElementById('solution-toggle-icon');
+      if (box.classList.contains('hidden')) {
+        box.classList.remove('hidden');
+        icon.innerText = '▼';
+      } else {
+        box.classList.add('hidden');
+        icon.innerText = '▶';
+      }
+    }
+
+    function runSnippetDemo() {
+      const consoleBox = document.getElementById('output-console-box');
+      consoleBox.classList.remove('hidden');
+      consoleBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function copySnippet() {
+      const text = document.getElementById('code-snippet-box').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-snippet-btn');
+        btn.innerHTML = `<span class="text-emerald-700 font-semibold">Copied</span>`;
+        setTimeout(() => { 
+          btn.innerHTML = `
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span>Copy</span>
+          `; 
+        }, 2000);
+      });
+    }
+
+    function goToPrevLesson() {
+      if (currentLesson && currentLesson.prev_lesson_slug) {
+        loadLesson(currentLesson.prev_lesson_slug);
+      }
+    }
+
+    function goToNextLesson() {
+      if (currentLesson && currentLesson.next_lesson_slug) {
+        loadLesson(currentLesson.next_lesson_slug);
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text || '';
+      return div.innerHTML;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => loadSyllabus('python'));
+  </script>
+</body>
+</html>
