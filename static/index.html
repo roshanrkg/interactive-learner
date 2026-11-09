@@ -74,15 +74,15 @@
       </a>
     </nav>
 
-    <!-- User Profile Pill -->
+    <!-- User Profile Pill & Sign Out -->
     <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/80 border border-slate-200/60 shadow-sm cursor-pointer hover:bg-white transition">
-        <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">
-          RK
-        </div>
-        <span class="text-xs font-semibold text-slate-800">Roshan KR. Gupta</span>
-        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      <div class="flex flex-col text-right px-3.5 py-1.5 rounded-2xl bg-white/80 border border-slate-200/60 shadow-sm leading-tight">
+        <span id="user-name" class="text-xs font-bold text-slate-800">Learner</span>
+        <span id="user-email" class="text-[11px] text-slate-500 font-medium"></span>
       </div>
+      <a href="/auth/logout" title="Sign Out" class="p-2.5 rounded-full bg-white/80 border border-slate-200/60 hover:bg-rose-50 hover:text-rose-600 text-slate-500 shadow-sm transition flex items-center justify-center">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+      </a>
     </div>
   </header>
 
@@ -670,7 +670,26 @@
       return div.innerHTML;
     }
 
-    window.addEventListener('DOMContentLoaded', () => loadSyllabus('python'));
+    async function loadUserProfile() {
+      try {
+        const res = await fetch('/api/v1/auth/me');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const u = json.data;
+            document.getElementById('user-name').innerText = u.name || 'Learner';
+            document.getElementById('user-email').innerText = u.email || '';
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load user profile', err);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadUserProfile();
+      loadSyllabus('python');
+    });
   </script>
 </body>
 </html>

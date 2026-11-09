@@ -1,16 +1,35 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
 require('dotenv').config();
 
 const pool = require('./db');
+const { passport } = require('./auth');
 
 const app = express();
-const PORT = process.env.PORT || 8081; 
+const PORT = process.env.PORT || 8081;
 
 // Standard Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session & Passport Middleware
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'interactive_learner_session_secret_2026',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // set to true in HTTPS production
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // API Response Helpers
 const respondSuccess = (res, data, status = 200) => {
@@ -27,13 +46,116 @@ const respondError = (res, message, status = 500) => {
   });
 };
 
+// Route Protection Middleware
+const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+  if (req.path.startsWith('/api/')) {
+    return respondError(res, 'Unauthorized. Please sign in.', 401);
+  }
+  return res.redirect('/login');
+};
+
 // ==========================================
-// API v1 Routes
+// Authentication Routes
+// ==========================================
+
+// Public login page
+app.get('/login', (req, res) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  return res.sendFile(path.join(__dirname, 'static', 'login.html'));
+});
+
+// Google OAuth initiate
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    prompt: 'select_account',
+  })
+);
+
+// Google OAuth callback
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/login?error=auth_failed',
+  }),
+  (req, res) => {
+    return res.redirect('/');
+  }
+);
+
+// Logout
+app.get('/auth/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    req.session.destroy(() => {
+      res.clearCookie('connect.sid');
+      return res.redirect('/login');
+    });
+  });
+});
+
+// Dev/Demo Quick Login (for testing without leaving localhost)
+app.get('/auth/dev-login', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM users WHERE google_id = ?', ['demo-user-123']);
+    let user;
+    if (rows.length > 0) {
+      user = rows[0];
+    } else {
+      const [result] = await pool.query(
+        'INSERT INTO users (google_id, email, name, avatar_url) VALUES (?, ?, ?, ?)',
+        ['demo-user-123', 'demo@learner.com', 'Demo Learner', 'https://api.dicebear.com/7.x/bottts/svg?seed=learner']
+      );
+      user = {
+        id: result.insertId,
+        google_id: 'demo-user-123',
+        email: 'demo@learner.com',
+        name: 'Demo Learner',
+        avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=learner',
+      };
+    }
+
+    req.login(user, (err) => {
+      if (err) return res.redirect('/login?error=dev_login_failed');
+      return res.redirect('/');
+    });
+  } catch (err) {
+    console.error('Dev login error:', err);
+    return res.redirect('/login?error=db_error');
+  }
+});
+
+// ==========================================
+// Static Assets (Available without auth for login page assets)
+// ==========================================
+app.use('/static', express.static(path.join(__dirname, 'static')));
+
+// ==========================================
+// API v1 Routes (Protected)
 // ==========================================
 const v1Router = express.Router();
 
+// GET /api/v1/auth/me (Returns logged-in user)
+v1Router.get('/auth/me', (req, res) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return respondSuccess(res, {
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      avatar_url: req.user.avatar_url,
+    });
+  }
+  return respondError(res, 'Not authenticated', 401);
+});
+
 // GET /api/v1/courses/:slug/syllabus
-v1Router.get('/courses/:slug/syllabus', async (req, res) => {
+v1Router.get('/courses/:slug/syllabus', ensureAuthenticated, async (req, res) => {
   const { slug } = req.params;
 
   if (!slug) {
@@ -119,7 +241,7 @@ v1Router.get('/courses/:slug/syllabus', async (req, res) => {
 });
 
 // GET /api/v1/lessons/:slug
-v1Router.get('/lessons/:slug', async (req, res) => {
+v1Router.get('/lessons/:slug', ensureAuthenticated, async (req, res) => {
   const { slug } = req.params;
 
   if (!slug) {
@@ -201,50 +323,7 @@ v1Router.get('/lessons/:slug', async (req, res) => {
 });
 
 // POST /api/v1/quizzes/verify
-v1Router.post('/quizzes/verify', async (req, res) => {
-  const { quiz_id, selected_option } = req.body || {};
-
-  if (!quiz_id || !selected_option) {
-    return respondError(res, 'invalid quiz submission: quiz_id and selected_option are required', 400);
-  }
-
-  const option = String(selected_option).trim().toUpperCase();
-  if (!['A', 'B', 'C', 'D'].includes(option)) {
-    return respondError(res, 'invalid option selected: must be A, B, C, or D', 400);
-  }
-
-  try {
-    const [rows] = await pool.query(
-      `SELECT correct_option, explanation, points
-       FROM quizzes
-       WHERE id = ?
-       LIMIT 1`,
-      [quiz_id]
-    );
-
-    if (rows.length === 0) {
-      return respondError(res, 'quiz not found', 400);
-    }
-
-    const { correct_option, explanation, points } = rows[0];
-    const normalizedCorrect = String(correct_option).trim().toUpperCase();
-    const isCorrect = option === normalizedCorrect;
-    const pointsAwarded = isCorrect ? points : 0;
-
-    return respondSuccess(res, {
-      is_correct: isCorrect,
-      correct_option: normalizedCorrect,
-      explanation: explanation || '',
-      points_awarded: pointsAwarded,
-    });
-  } catch (err) {
-    console.error('Error verifying quiz answer:', err);
-    return respondError(res, `failed to verify answer: ${err.message}`, 500);
-  }
-});
-
-// POST /api/v1/quizzes/verify
-v1Router.post('/quizzes/verify', async (req, res) => {
+v1Router.post('/quizzes/verify', ensureAuthenticated, async (req, res) => {
   const { quiz_id, selected_option } = req.body || {};
 
   if (!quiz_id || !selected_option) {
@@ -295,13 +374,18 @@ v1Router.get('/health', (req, res) => {
 app.use('/api/v1', v1Router);
 
 // ==========================================
-// Static Assets & SPA Fallback
+// SPA Protected Root & Fallback
 // ==========================================
-app.use('/static', express.static(path.join(__dirname, 'static')));
-
-// Fallback to index.html for client-side routing (equivalent to Gin's NoRoute)
-app.use((req, res) => {
+app.get('/', ensureAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'static', 'index.html'));
+});
+
+// Fallback to index.html for authenticated client-side routing
+app.use((req, res) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return res.sendFile(path.join(__dirname, 'static', 'index.html'));
+  }
+  return res.redirect('/login');
 });
 
 // Global error handling middleware
@@ -317,6 +401,7 @@ if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`🚀 Interactive Learner Node.js Server is live at http://localhost:${PORT}`);
     console.log(`👉 API Base: http://localhost:${PORT}/api/v1`);
+    console.log(`🔑 Login Page: http://localhost:${PORT}/login`);
   });
 }
 
