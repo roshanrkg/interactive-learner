@@ -456,26 +456,55 @@ v1Router.post('/lessons/:slug/complete', ensureAuthenticated, async (req, res) =
 
 // POST /api/v1/visualize
 v1Router.post('/visualize', ensureAuthenticated, async (req, res) => {
-  const { topic, language, code, lesson_title } = req.body || {};
+  const { topic, language, code, lesson_title, force_refresh } = req.body || {};
 
   if (!topic) {
     return respondError(res, 'topic is required for visualization', 400);
   }
 
+  const cleanTopic = String(topic).trim();
+  const cleanLang = String(language || 'Python').trim();
+  const userId = req.user.id;
+
   try {
+    // 1. Check database cache first if not explicitly force_refresh
+    if (!force_refresh) {
+      const [cachedRows] = await pool.query(
+        `SELECT id, topic, language, code_snippet, html_content, created_at 
+         FROM user_visualizations 
+         WHERE user_id = ? AND LOWER(TRIM(topic)) = LOWER(TRIM(?)) AND LOWER(TRIM(language)) = LOWER(TRIM(?))
+         ORDER BY id DESC LIMIT 1`,
+        [userId, cleanTopic, cleanLang]
+      );
+
+      if (cachedRows.length > 0) {
+        const cached = cachedRows[0];
+        return respondSuccess(res, {
+          id: cached.id,
+          html: cached.html_content,
+          topic: cached.topic,
+          language: cached.language,
+          code_snippet: cached.code_snippet,
+          cached: true,
+          created_at: cached.created_at,
+        });
+      }
+    }
+
+    // 2. Not cached: Generate using Gemini API
     const html = await generateVisualization({
-      topic,
-      language: language || 'Python',
+      topic: cleanTopic,
+      language: cleanLang,
       code: code || '',
       lessonTitle: lesson_title || '',
     });
 
-    // Save to user_visualizations in database
+    // 3. Save to user_visualizations in database
     let savedId = null;
     try {
       const [insertRes] = await pool.query(
-        'INSERT INTO user_visualizations (user_id, topic, language, html_content) VALUES (?, ?, ?, ?)',
-        [req.user.id, topic, language || 'Python', html]
+        'INSERT INTO user_visualizations (user_id, topic, language, code_snippet, html_content) VALUES (?, ?, ?, ?, ?)',
+        [userId, cleanTopic, cleanLang, code || null, html]
       );
       savedId = insertRes.insertId;
     } catch (saveErr) {
@@ -485,8 +514,9 @@ v1Router.post('/visualize', ensureAuthenticated, async (req, res) => {
     return respondSuccess(res, {
       id: savedId,
       html,
-      topic,
-      language: language || 'Python',
+      topic: cleanTopic,
+      language: cleanLang,
+      cached: false,
     });
   } catch (err) {
     console.error('Visualization generation error:', err);
@@ -494,7 +524,7 @@ v1Router.post('/visualize', ensureAuthenticated, async (req, res) => {
   }
 });
 
-// GET /api/v1/visualizations (history list)
+// GET /api/v1/visualizations (history list of questions)
 v1Router.get('/visualizations', ensureAuthenticated, async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -502,7 +532,7 @@ v1Router.get('/visualizations', ensureAuthenticated, async (req, res) => {
        FROM user_visualizations 
        WHERE user_id = ? 
        ORDER BY id DESC 
-       LIMIT 30`,
+       LIMIT 50`,
       [req.user.id]
     );
     return respondSuccess(res, rows);
@@ -512,11 +542,11 @@ v1Router.get('/visualizations', ensureAuthenticated, async (req, res) => {
   }
 });
 
-// GET /api/v1/visualizations/:id
+// GET /api/v1/visualizations/:id (single saved visualization)
 v1Router.get('/visualizations/:id', ensureAuthenticated, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT id, topic, language, html_content, created_at 
+      `SELECT id, topic, language, code_snippet, html_content, created_at 
        FROM user_visualizations 
        WHERE id = ? AND user_id = ? 
        LIMIT 1`,
@@ -529,6 +559,20 @@ v1Router.get('/visualizations/:id', ensureAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Error fetching visualization detail:', err);
     return respondError(res, `failed to load visualization: ${err.message}`, 500);
+  }
+});
+
+// DELETE /api/v1/visualizations/:id (delete saved visualization)
+v1Router.delete('/visualizations/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM user_visualizations WHERE id = ? AND user_id = ?', [
+      req.params.id,
+      req.user.id,
+    ]);
+    return respondSuccess(res, { deleted: true, id: req.params.id });
+  } catch (err) {
+    console.error('Error deleting visualization:', err);
+    return respondError(res, `failed to delete visualization: ${err.message}`, 500);
   }
 });
 
