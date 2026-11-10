@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
-
+  
 const pool = require('./db');
 const { passport } = require('./auth');
 const { generateVisualization } = require('./services/visualizer');
@@ -609,8 +609,8 @@ app.use((err, req, res, next) => {
 // Start Server
 // ==========================================
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Interactive Learner Node.js Server is live at http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Interactive Learner Node.js Server is live on port ${PORT}`);
     console.log(`👉 API Base: http://localhost:${PORT}/api/v1`);
     console.log(`🔑 Login Page: http://localhost:${PORT}/login`);
   });

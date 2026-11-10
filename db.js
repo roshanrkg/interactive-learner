@@ -3,11 +3,12 @@ require('dotenv').config();
 
 // Determine database environment target:
 // 1. Explicit toggle via DB_TARGET ('live' vs 'local') or USE_LIVE_DB
-// 2. Auto-detected live host environments (Clever Cloud sets MYSQL_ADDON_URI, Render/Railway sets DATABASE_URL)
+// 2. Auto-detected live host environments (Render sets RENDER=true, Clever Cloud sets MYSQL_ADDON_URI, etc.)
 // 3. Defaults to 'local' for development on your machine
 const isLiveEnvironment =
   process.env.DB_TARGET === 'live' ||
   process.env.USE_LIVE_DB === 'true' ||
+  Boolean(process.env.RENDER) ||
   Boolean(process.env.MYSQL_ADDON_URI) ||
   Boolean(process.env.DATABASE_URL) ||
   (process.env.NODE_ENV === 'production' && process.env.DB_TARGET !== 'local');
